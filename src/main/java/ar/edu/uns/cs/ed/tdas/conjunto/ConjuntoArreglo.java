@@ -45,6 +45,13 @@ public class   ConjuntoArreglo<E>   implements conjunto<E> {
         }
         return false;
     }
+    
+    public boolean perteneceRecursivo(E elem,int i){
+        if(i>=cantidad) return false;
+        if(arreglo[i].equals(elem)) return true;
+        return perteneceRecursivo(elem,i+1);
+    }
+
 
     @Override
     public conjunto<E> interseccion(conjunto<E> c) {

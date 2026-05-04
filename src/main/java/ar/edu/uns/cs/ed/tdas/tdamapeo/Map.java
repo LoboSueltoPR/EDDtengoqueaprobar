@@ -31,7 +31,7 @@ public interface Map<K,V>
 	/**
 	 * Si el mapeo no tiene una entrada con clave key, inserta una entrada con clave key y valor value en el mapeo y devuelve null. 
 	 * Si el mapeo ya tiene una entrada con clave key, entonces remplaza su valor y retorna el viejo valor.
-	 * @param key Clave de la entrada a crear.
+	 * @param key Clave de la entrada a crear. 
 	 * @param value Valor de la entrada a crear. 
 	 * @return Valor de la vieja entrada.
 	 * @throws InvalidKeyException si la clave pasada por parámetro es inválida.
