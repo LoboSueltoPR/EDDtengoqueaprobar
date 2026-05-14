@@ -25,7 +25,7 @@ public class TreeTest {
 	 */
 	private Tree<Integer> getTree() {
 		Tree<Integer> t = null;
-		//t = new Arbol<Integer>(); //TODO: Descomentar y crear instancia del TDA a testear
+		t = new Arbol<Integer>(); //TODO: Descomentar y crear instancia del TDA a testear
 		return t;
 	}
 

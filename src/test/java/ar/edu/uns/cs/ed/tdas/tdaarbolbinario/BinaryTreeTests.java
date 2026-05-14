@@ -40,7 +40,7 @@ public class BinaryTreeTests {
 	 */
 	@Before
 	public void setUp() {
-		//binaryTree = new ArbolBinario<Object>(); //TODO: Descomentar y crear instancia del TDA a testear
+		binaryTree = new ArbolBinario<Object>(); //TODO: Descomentar y crear instancia del TDA a testear
 		
 		// para método attach
 		//leftTree = new ArbolBinario<Object>(); //TODO: Descomentar y crear instancia del TDA a testear

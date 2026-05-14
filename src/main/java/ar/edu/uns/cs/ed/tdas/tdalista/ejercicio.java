@@ -100,25 +100,7 @@ public <E> Iterable<E> eliminarComunes(PositionList<E> l1, PositionList<E> l2) {
 		}
 		return toRet;
 	}
-//los pares van en el orden q entrar, los impares van al revez
-    public statis Queue<Integer> FiltraryReordenar(PositionList<Integer> lista){ 
-        Queue<Integer> toRet = new LinkedQueue<>();
-        Stack<Integer> impares = new LinkedStack<>();
-        for(Integer elem:lista){
-            if(elem%2==0){
-                toRet.enqueue(elem);
-            }else{
-                impares.push(elem);
-            }
-        }
-        while(!impares.isEmpty()){
-            toRet.enqueue(impares.pop());
-        }
-        return toRet;
 
-
-        
-    }
 
     public boolean Submulticonjunto (PositionList<Character> l1, PositionList<Character> l2){
         boolean toRet = true;
