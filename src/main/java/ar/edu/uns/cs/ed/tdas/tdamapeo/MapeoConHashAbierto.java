@@ -3,14 +3,14 @@ import ar.edu.uns.cs.ed.tdas.tdalista.*;
 import ar.edu.uns.cs.ed.tdas.excepciones.*;
 import ar.edu.uns.cs.ed.tdas.*;
 public class MapeoConHashAbierto<K,V> implements Map<K,V> {
-    private Map<K,V> [] A;
+    private PositionList<Entrada<K,V>> [] A;
     private int n; //n es size, la cantidad de entradas en el mapeo
     private static int N=13; //N es la cantidad de buckets, el tamaño del arreglo de buckets
     public MapeoConHashAbierto() {
         this.n = 0;
-        A = (Map<K,V>[]) new MapeoConLista[N]; // Arreglo de buckets
+        A = (PositionList<Entrada<K,V>> []) new ListaDE[N]; // Arreglo de buckets
         for (int i = 0; i < N; i++) {
-            A[i] = new MapeoConLista<K,V>();
+            A[i] = new ListaDE<Entrada<K,V>>();
         }
     }
 
