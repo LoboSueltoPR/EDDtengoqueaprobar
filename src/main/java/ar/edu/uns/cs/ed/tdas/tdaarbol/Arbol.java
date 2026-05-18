@@ -182,23 +182,23 @@ public class Arbol<E> implements Tree<E> {
 	 * @return La posición del nuevo nodo creado.
 	 * @throws InvalidPositionException si la posición pasada por parámetro es inválida, o el árbol está vacío, o la posición rb no corresponde a un nodo hijo del nodo referenciado por p.
 	 */
-	public Position<E> addBefore(Position<E> p, Position<E> rb, E e) {
-		Tnodo<E> n = checkposition( p );
-		Tnodo<E> hd = checkposition( rb );
-		Tnodo<E> nuevo = new Tnodo<E>( e, n ); // Conecto el nodo nuevo con el padre
-		PositionList<Tnodo<E>> hijos = n.getHijos();
-		// Buscar dónde está rb en la lista de hijos de p
-		boolean encontre = false;
-		Position<Tnodo<E>> pp = hijos.first();
-		while( pp != null && !encontre )
-		// Testeo si el elemento corriente de la lista de hijos de p es rb
-		if( hd == pp.element() ) encontre = true; // Sí, es! => terminé el bucle
-		else pp = (pp != hijos.last() ? hijos.next(pp) : null); // No es => avanzo
-		if( !encontre ) // => Hay un problema con los argumentos
-		throw new InvalidPositionException(" “p no es padre de rb”" );
-		hijos.addBefore( pp, nuevo ); // Inserto al nodo nuevo delante de rb
-		size++; // Incremento el tamaño del árbol
-		return nuevo; // Retorno el nodo creado
+	public Position<E> addBefore(Position<E> p, Position<E> rb, E e)throws InvalidPositionException {
+		Tnodo<E> padre = checkposition(p);
+		Tnodo<E> hermanoderecho = checkposition(rb);
+		if(hermanoderecho.getParent()!=padre)throw new InvalidPositionException(null);
+		Tnodo<E> nodonuevo = new Tnodo<E>(e, padre);
+		Iterator<Position<Tnodo<E>>> it = padre.getHijos().positions().iterator();
+		boolean agregado = false;
+
+		while(it.hasNext()&&!agregado){
+			Position<Tnodo<E>> pos = it.next();
+			if(pos.element()==hermanoderecho){
+				agregado=true;
+				padre.getHijos().addBefore(pos, nodonuevo);
+				size++;
+			}
+		}
+		return nodonuevo;
 	}
 
 	/**
@@ -209,8 +209,25 @@ public class Arbol<E> implements Tree<E> {
 	 * @return La posición del nuevo nodo creado.
 	 * @throws InvalidPositionException si la posición pasada por parámetro es inválida, o el árbol está vacío, o la posición lb no corresponde a un nodo hijo del nodo referenciado por p.
 	 */
-	public Position<E> addAfter (Position<E> p, Position<E> lb, E e);
-	
+	public Position<E> addAfter (Position<E> p, Position<E> lb, E e){
+		Tnodo<E> padre = checkposition(p);
+		Tnodo<E> hermanoderecho = checkposition(lb);
+		if(hermanoderecho.getParent()!=padre)throw new InvalidPositionException(null);
+		Tnodo<E> nodonuevo = new Tnodo<E>(e, padre);
+		Iterator<Position<Tnodo<E>>> it = padre.getHijos().positions().iterator();
+		boolean agregado = false;
+
+		while(it.hasNext()&&!agregado){
+			Position<Tnodo<E>> pos = it.next();
+			if(pos.element()==hermanoderecho){
+				agregado=true;
+				padre.getHijos().addAfter(pos, nodonuevo);
+				size++;
+			}
+		}
+		return nodonuevo;
+		
+	}	
 	/**
 	 * Elimina el nodo referenciado por una posición dada, si se trata de un nodo externo. 
 	 * @param n Posición del nodo a eliminar.
