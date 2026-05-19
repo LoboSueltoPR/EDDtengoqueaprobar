@@ -3,7 +3,7 @@ import java.util.Iterator;
 import ar.edu.uns.cs.ed.tdas.Position;
 import ar.edu.uns.cs.ed.tdas.excepciones.*;
 import ar.edu.uns.cs.ed.tdas.tdalista.*;
-
+import ar.edu.uns.cs.ed.tdas.tdamapeo.*;
 /**
  * Clase Arbol
  * Es la implementación de la interfaz Tree utilizando nodos con referencias a sus hijos y a su padre.
@@ -233,7 +233,34 @@ public class Arbol<E> implements Tree<E> {
 	 * @param n Posición del nodo a eliminar.
 	 * @throws InvalidPositionException si la posición pasada por parámetro es inválida o no corresponde a un nodo externo, o el árbol está vacío.
 	 */
-	public void removeExternalNode (Position<E> p);
+	public void removeExternalNode (Position<E> p)throws InvalidPositionException{
+		Tnodo<E> nodo= checkposition(p);
+		if(!nodo.getHijos().isEmpty()){
+			throw new InvalidPositionException("El nodo no es externo");
+		}
+		if ( nodo == root() ) {
+			root = null; 
+			size = 0; 
+			nodo.setElement(null); 
+			return;
+		}
+		Tnodo<E> padre = nodo.getParent();
+		PositionList<Tnodo<E>> hijospadre = padre.getHijos();
+		boolean encontre = false;
+		Position<Tnodo<E>> pp = null;
+		Iterator<Position<Tnodo<E>>> it = hijospadre.positions().iterator();
+		while(it.hasNext()&&!encontre){
+			pp = it.next();
+			if(pp.element()==nodo){
+				encontre = true;
+			}
+		}
+		if(!encontre)throw new InvalidPositionException(" “p no aparece en la lista de hijos de su padre: ¡no eliminé!”" );
+		hijospadre.remove(pp);
+		nodo.setElement(null);
+		nodo.setFather(null);
+		size--;
+	}
 	
 	/**
 	 * Elimina el nodo referenciado por una posición dada, si se trata de un nodo interno. Los hijos del nodo eliminado lo reemplazan en el mismo orden en el que aparecen. 
@@ -241,7 +268,44 @@ public class Arbol<E> implements Tree<E> {
 	 * @param n Posición del nodo a eliminar.
 	 * @throws InvalidPositionException si la posición pasada por parámetro es inválida o no corresponde a un nodo interno o corresponde a la raíz (con más de un hijo), o el árbol está vacío.
 	 */
-	public void removeInternalNode (Position<E> p);
+	public void removeInternalNode (Position<E> p)throws InvalidPositionException{
+		Tnodo<E> nodo = checkposition(p);
+		if(nodo.getHijos().isEmpty())throw new InvalidPositionException("no corresponde a un nodo interno");
+		if(nodo==root){
+			Position<Tnodo<E>> pp = null;
+			if(nodo.getHijos().size()>1){
+				throw new InvalidPositionException("null");
+			}else if(nodo.getHijos().size()==1){
+				Iterator<Position<Tnodo<E>>> it = nodo.getHijos().positions().iterator();
+				while(it.hasNext()){
+					pp=it.next();
+				}			
+			root = pp.element();
+			nodo.setElement(null);
+			pp.element().setFather(null);
+			size--;
+			return;
+			}
+		}
+		Iterable<Position<Tnodo<E>>> ithijosnodo = nodo.getHijos().positions();
+		Iterator<Position<Tnodo<E>>> ithijospadre = nodo.getParent().getHijos().positions().iterator();
+		Position<Tnodo<E>> puntero = null;
+		boolean encontre = false;
+		while (ithijospadre.hasNext()&&!encontre){
+			puntero = ithijospadre.next();
+			if(puntero.element()==nodo){
+				encontre=true;
+			}
+		}
+		for(Position<Tnodo<E>> pos :ithijosnodo){
+			nodo.getParent().getHijos().addBefore(puntero, pos.element());
+			pos.element().setFather(nodo.getParent());
+		}
+		nodo.getParent().getHijos().remove(puntero);
+		puntero.element().setElement(null);
+		size--;
+		return;
+	}
 	
 	/**
 	 * Elimina el nodo referenciado por una posición dada. Si se trata de un nodo interno, los hijos del nodo eliminado lo reemplazan en el mismo orden en el que aparecen. 
@@ -249,7 +313,10 @@ public class Arbol<E> implements Tree<E> {
 	 * @param n Posición del nodo a eliminar.
 	 * @throws InvalidPositionException si la posición pasada por parámetro es inválida o corresponde a la raíz (con más de un hijo), o el árbol está vacío.
 	 */
-	public void removeNode (Position<E> p);
+	public void removeNode (Position<E> p)throws InvalidPositionException{
+		if(isInternal(p))removeInternalNode(p);
+		if(isExternal(p))removeExternalNode(p);
+	}
 	
 	/**
 	 * Devuelve un iterador de los elementos almacenados en el árbol en preorden.
@@ -274,14 +341,128 @@ public class Arbol<E> implements Tree<E> {
 		return l;
 		}
 // Tpositions(n) → O(n)
-private void pre(Tnodo<E> v, PositionList<Position<E>> l) {
+	private void pre(Tnodo<E> v, PositionList<Position<E>> l) {
 	l.addLast( v ); // La visita de v consiste de “encolar” v en l
 	for( Tnodo<E> h : v.getHijos()) // para cada hijo h de v hacer
 	pre( h, l ); // preorden de h
 }
 
-	
+// Este método deberá eliminar del árbol receptor del mensaje a la posición p siempre que p sea el último hijo
+// (de izq a der) de su padre. La raíz no se considera último hijo, en este caso el método deberá lanzar
+// InvalidOperationException. Si la posición p es inválida el método deberá lanzar
+// InvalidPositionException.
 
-	
+	public void eliminarUltimoHijo(Position<E> p)throws InvalidPositionException,InvalidOperationException{
+		Tnodo<E> nodo = checkposition(p);
+		if (nodo==root)throw new InvalidOperationException(null);
+		Iterator<Position<Tnodo<E>>> ithijospadre = nodo.getParent().getHijos().positions().iterator();
+		Position<Tnodo<E>> puntero = null;
+		while(ithijospadre.hasNext()){
+			puntero = ithijospadre.next();
+		}
+		if (puntero.element()==nodo){
+			for(Position<Tnodo<E>> pos : nodo.getHijos().positions()){
+				nodo.getParent().getHijos().addBefore(puntero, pos.element());
+			}
+			nodo.getParent().getHijos().remove(puntero);
+			nodo.setFather(null);
+			size--;
+		}
+	}
+
+// EJ3		Programe un método con la siguiente signatura: public Map<Character, Integer>
+// cantidadRepeticiones(Tree<Character> t). Este método deberá retornar un mapeo con cada uno de los
+// caracteres del árbol y la cantidad de veces que aparece cada carácter en el árbol. Resuelva este problema utilizando
+// un recorrido en preorden.
+
    
+	public Map<Character,Integer> cantidadRepeticiones(Tree<Character> t){
+		Map<Character,Integer> toRet = new Mapeo<>();
+		preOrder(t.root(),t,toRet);
+		return toRet;
+	}
+
+	private  void preOrder(Position<Character> nodo,Tree<Character> t,Map<Character,Integer> m){
+		Integer val = m.get(nodo.element());
+		if(val==null){
+			m.put(nodo.element(),1);
+		}else{
+			m.put(nodo.element(), val + 1);
+		}
+		for(Position<Character> pos: t.positions()){
+			preOrder(pos, t, m);
+		}
+	}
+
+
+//EJ5 	Escriba un método tal que dado un árbol genérico a y un elemento e, elimine de a todas las apariciones de e.
+// Compare los elementos por equivalencia. El método debe retornar la cantidad de eliminaciones realizadas
+	public int eliminarapariciones(E elem,Tree<E> arb){
+		int toRet=0;
+		for(Position<E> pos : arb.positions()){
+			if (pos.element().equals(elem)) {
+				arb.removeNode(pos);
+				toRet++;
+			}
+		}
+	return toRet;
+	}
+
+// EJ4		Dado un árbol a de Strings y un String s, programe un método tal que retorne un Iterable con las
+// posiciones del árbol en las que aparece el String s. Para resolver este problema implemente un recorrido en
+// postorden
+
+	public Iterable<Position<String>> posArbol(String s, Tree<String> a){
+		PositionList<Position<String>> toRet = new ListaDE<>();
+		PosOrden(a.root(),s,a,toRet);
+		return toRet;
+	}
+
+	private void PosOrden(Position<String> nodo,String s, Tree<String> a, PositionList<Position<String>> toRet){
+		for(Position<String> pos : a.children(nodo)){
+			PosOrden(pos,s,a,toRet);
+		}
+		if(nodo.element().equals(s))toRet.addLast(nodo);
+	}
+
+
+	public boolean pertenece(Arbol<Integer> a, Integer n){
+		boolean toRet = false;
+		Iterator<Integer> it = a.iterator();
+		while(it.hasNext()&&!toRet){
+			Integer i = it.next();
+			toRet= i.equals(n);
+		}
+		return toRet;
+	}
+
+// 	Suponiendo que cuenta con una clase Arbol<E> que implementa la interfaz Tree<E>
+// vista en clase. Esta clase utiliza la implementación de lista de hijos y enlace al
+// padre. Agregue un método a esta clase cuya signatura sea public int
+// sizeSubarbol(Position<E> p). Este método deberá retornar el tamaño del subárbol
+// con raíz p del árbol receptor del mensaje. Si utiliza otros métodos del TDA Arbol
+// deberá implementarlos. Se debe lanzar InvalidPositionException cuando
+// corresponda
+	public int sizeSubarbol(Position<E> p){
+		checkposition(p); // Validar la posición
+		return contarSubarbol(p);
+	}
+	
+	private int contarSubarbol(Position<E> p){
+		int count = 1; // Contar el nodo actual
+		for(Position<E> hijo : children(p)){
+			count += contarSubarbol(hijo);
+		}
+		return count;
+	}
+
+// 	Suponiendo que cuenta con una clase Arbol<E> que implementa la interfaz Tree<E>
+// vista en clase. Esta clase utiliza la implementación de lista de hijos y enlace al
+// padre. Agregue un método a esta clase cuya signatura sea public
+// Map<Position<E>, Integer> mapSizeSubarboles( ). Este método deberá retornar
+// un mapeo entre posiciones del árbol y el tamaño del subárbol que tiene a esa
+// posición como raíz. Si utiliza otros métodos del TDA Arbol deberá implementarlos.
+// Se debe lanzar InvalidPositionException cuando corresponda.
+
+
 }

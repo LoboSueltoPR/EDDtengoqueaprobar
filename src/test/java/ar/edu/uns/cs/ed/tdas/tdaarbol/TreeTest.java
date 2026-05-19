@@ -34,7 +34,7 @@ public class TreeTest {
 	 */
 	private <E> Queue<E> getAuxQueue() {
 		Queue<E> q = null;
-		//q = new ArrayQueue<E>(); //TODO: Descomentar y crear instancia de Queue<E> auxiliar
+		q = new ColaEnlazada<E>(); //TODO: Descomentar y crear instancia de Queue<E> auxiliar
 		return q;
 	}
 
@@ -43,7 +43,7 @@ public class TreeTest {
 	 */
 	private <E> PositionList<E> getAuxPositionList() {
 		PositionList<E> l = null;
-		//l = new ListaDoblementeEnlazada<E>(); //TODO: Descomentar y crear instancia de PositionList<E> auxiliar
+		l = new ListaDE<E>(); //TODO: Descomentar y crear instancia de PositionList<E> auxiliar
 		return l;
 	}
 
