@@ -464,5 +464,45 @@ public class Arbol<E> implements Tree<E> {
 // posición como raíz. Si utiliza otros métodos del TDA Arbol deberá implementarlos.
 // Se debe lanzar InvalidPositionException cuando corresponda.
 
+	public Map<Position<E>, Integer> mapSizeSubarboles(){
+		Map<Position<E>,Integer> toRet = new Mapeo<>();
+		visita(toRet,this.root);	
+		return toRet;
+	}
+
+	private void visita(Map<Position<E>,Integer> toRet, Position<E> nodo){
+
+		for(Position<E> pos : children(nodo)){
+			visita(toRet,pos);
+		}
+		toRet.put(nodo,this.sizeSubarbol(nodo));
+	}
+
+// 	Problema 3
+// Suponiendo que cuenta con una clase Arbol<E> que implementa la interfaz Tree<E>
+// vista en clase. Esta clase utiliza la implementación de lista de hijos y enlace al
+// padre. Agregue un método a esta clase cuya signatura sea public int
+// podarSubarbol(Position<E> p). Este método deberá eliminar el subarbol con raíz
+// p del árbol receptor del mensaje. Retorna el tamaño del subárbol eliminado. Si
+// utiliza otros métodos del TDA Arbol deberá implementarlos. Se debe lanzar
+// InvalidPositionException cuando corresponda.
+
+public int podarSubarbol(Position<E> p)throws InvalidPositionException{
+	Tnodo<E> nodo = checkposition(p);
+	int toRet = sizeSubarbol(p);
+	
+	Iterator<Position<Tnodo<E>>> it = nodo.getParent().getHijos().positions().iterator();
+	Position<Tnodo<E>> puntero = null;
+	boolean encontre = false;
+	while(it.hasNext()&&!encontre){
+		puntero = it.next();
+		encontre=puntero.element()==nodo;
+	}
+	nodo.getParent().getHijos().remove(puntero);
+	size=size - toRet;
+
+	return toRet;
+}
+
 
 }

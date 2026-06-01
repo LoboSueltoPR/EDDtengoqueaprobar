@@ -2,7 +2,7 @@ package ar.edu.uns.cs.ed.tdas.tdamapeo;
 import ar.edu.uns.cs.ed.tdas.excepciones.*;
 import ar.edu.uns.cs.ed.tdas.*;
 import ar.edu.uns.cs.ed.tdas.tdalista.*;
-
+import javafx.util.Pair; 
 public class Mapeo<K,V> implements Map<K,V> {
     private Entrada<K,V> [] A;
     private int n; //n es size, la cantidad de entradas en el mapeo
@@ -129,5 +129,7 @@ public class Mapeo<K,V> implements Map<K,V> {
         return entradas;
     }
 
-    
+    public PositionList<Pair<Integer,Integer>> coincidan(Map<Pair<Integer,Integer>> m1,Map<Pair<Integer,Integer>> m2){
+            
+    }
 }
