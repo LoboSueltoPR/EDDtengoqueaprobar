@@ -9,7 +9,7 @@ public class Mapeo<K,V> implements Map<K,V> {
     private static int N=20000; //N es la cantidad de buckets
     public Mapeo() {
         this.n = 0;
-        A = (Entrada<K,V> []) new Entrada[N];
+        A = (Entrada<K,V> []) new Entrada[N];   
     }
     
     
@@ -130,6 +130,6 @@ public class Mapeo<K,V> implements Map<K,V> {
     }
 
     public PositionList<Pair<Integer,Integer>> coincidan(Map<Pair<Integer,Integer>> m1,Map<Pair<Integer,Integer>> m2){
-            
+        
     }
 }
