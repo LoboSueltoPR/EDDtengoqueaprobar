@@ -2,6 +2,7 @@ package ar.edu.uns.cs.ed.tdas.tdaarbol;
 import java.util.Iterator;
 import ar.edu.uns.cs.ed.tdas.Position;
 import ar.edu.uns.cs.ed.tdas.excepciones.*;
+import ar.edu.uns.cs.ed.tdas.tdaarbolbinario.BinaryTree;
 import ar.edu.uns.cs.ed.tdas.tdalista.*;
 import ar.edu.uns.cs.ed.tdas.tdamapeo.*;
 /**
@@ -504,5 +505,72 @@ public int podarSubarbol(Position<E> p)throws InvalidPositionException{
 	return toRet;
 }
 
+public Iterable<Position<String>> buscarPostorden(Tree<String> t, String s)throws EmptyTreeException{
+	if(t.isEmpty())throw new EmptyTreeException("arbol vacio");
+	PositionList<Position<String>> toRet= new ListaDE<>();
+	buscarpos(t,t.root(),s,toRet);
+	return toRet;
+}
 
+private void buscarpos(Tree<String> t,Position<String> nodo,String s,PositionList<Position<String>> toRet){
+	if(nodo.element().equals(s))toRet.addLast(nodo);
+
+	for(Position<String> hijos : t.children(nodo)){
+		buscarpos(t,hijos,s,toRet);
+	}
+
+}
+
+
+public Map<String, Integer> clasificarNodos(Tree<Integer> t){
+	Map<String,Integer> toRet=new MapeoConHashAbierto<>();
+	toRet.put("positivos",0);
+	toRet.put("negativos",0);
+	toRet.put("ceros",0);
+	clasifpreorden(t,t.root(),toRet);
+	return toRet;
+}
+
+private void clasifpreorden(Tree<Integer> t,Position<Integer> nodo, Map<String,Integer> toRet){
+	if(nodo.element()>0){
+		toRet.put("positivos", toRet.get("positivos")+1);
+	}else if(nodo.element()<0){
+		toRet.put("negativos", toRet.get("negativos")+1);
+	}else if(nodo.element()==0){
+		toRet.put("ceros", toRet.get("ceros")+1);
+	}
+
+	for(Position<Integer> hijos:t.children(nodo)){
+		clasifpreorden(t,hijos,toRet);
+	}
+}
+
+public Map<Character, Integer> cantOperadores(BinaryTree<Character> a){
+		Map<Character,Integer> toRet=new MapeoConHashAbierto<>();
+	toRet.put('+',0);
+	toRet.put('-',0);
+	toRet.put('*',0);
+	toRet.put('/',0);
+	clasifposorden(a,a.root(),toRet);
+	return toRet;
+}
+
+	private void clasifposorden(BinaryTree<Character> t,Position<Character> nodo,Map<Character,Integer> toRet){
+		if(t.hasLeft(nodo)){
+			clasifposorden(t, t.left(nodo), toRet);
+		}
+		if(t.hasRight(nodo)){
+			clasifposorden(t, t.right(nodo), toRet);
+		}
+		
+		if(nodo.element().equals('+')){
+			toRet.put('+', toRet.get('+')+1);
+		}else if(nodo.element().equals('-')){
+			toRet.put('-', toRet.get('-')+1);
+		}else if(nodo.element().equals('*')){
+			toRet.put('*', toRet.get('*')+1);
+		}else if(nodo.element().equals('/')){
+			toRet.put('/', toRet.get('/')+1);
+		}
+}
 }

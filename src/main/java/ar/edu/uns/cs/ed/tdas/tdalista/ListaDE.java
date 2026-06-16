@@ -383,4 +383,11 @@ public class ListaDE<E> implements PositionList<E> {
 		
 		return eliminados;
 	}
+
+	public void duplicarElementos(PositionList<E> lista)throws EmptyListException{
+		if(isEmpty())throw new EmptyListException("lista vacia");
+		for(Position<E> pos:lista.positions()){
+			lista.addBefore(pos, pos.element());
+		}
+	}
 }

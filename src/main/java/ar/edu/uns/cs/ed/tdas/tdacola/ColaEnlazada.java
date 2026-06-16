@@ -1,6 +1,7 @@
 package ar.edu.uns.cs.ed.tdas.tdacola;
-
 import ar.edu.uns.cs.ed.tdas.excepciones.EmptyQueueException;
+import ar.edu.uns.cs.ed.tdas.tdamapeo.Map;
+import ar.edu.uns.cs.ed.tdas.tdamapeo.MapeoConHashAbierto;
 
 public class ColaEnlazada<E> implements Queue<E> {
     private Nodo<E> head;
@@ -80,5 +81,22 @@ public class ColaEnlazada<E> implements Queue<E> {
 
     }
 
-    
+    public void eliminarDuplicados(Queue<Integer> cola){
+        if(cola.isEmpty())return;
+        Map<Integer,Integer> mapeo = new MapeoConHashAbierto<>();
+        Integer i;
+        Queue<Integer> aux =new ColaEnlazada<>(); 
+        while(!cola.isEmpty()){
+            i=cola.dequeue();
+            if(mapeo.get(i)==null){
+                mapeo.put(i, i);
+                aux.enqueue(i);
+            }
+        }
+        while(!aux.isEmpty()){
+            cola.enqueue(aux.dequeue());
+        }
+    }
+        
 }
+

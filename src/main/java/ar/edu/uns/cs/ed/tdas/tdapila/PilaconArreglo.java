@@ -92,4 +92,29 @@ public class PilaconArreglo<E> implements Stack<E>{
             pila.push(pila.pop());
         }
     } 
+
+    public boolean estaOrdenada(Stack<Integer> pila)throws EmptyStackException{
+        if(pila.isEmpty()) throw new EmptyStackException("pila vacia");
+
+        Stack<Integer> aux = new PilaconArreglo<>();
+        boolean toRet=true;
+        Integer i;
+        while(!pila.isEmpty()&&toRet){
+           i = pila.pop();
+        if (!aux.isEmpty()) {
+            toRet = aux.top() >= i;
+        }
+        aux.push(i);
+        }
+
+        while(!pila.isEmpty()){
+            aux.push(pila.pop());
+        }
+
+        while(!aux.isEmpty()){
+            pila.push(aux.pop());
+        }
+
+        return toRet;
+    }
 }

@@ -1,5 +1,6 @@
 package ar.edu.uns.cs.ed.tdas.tdapila;
 import ar.edu.uns.cs.ed.tdas.excepciones.*;
+import ar.edu.uns.cs.ed.tdas.tdacola.*;
 public class PilaEnlazada<E> implements Stack<E> {
     protected Nodo<E> head;
     protected int cant;
@@ -62,4 +63,34 @@ public class PilaEnlazada<E> implements Stack<E> {
 
 
     }
+
+    public void eliminarNegativos(Stack<Integer> pila){
+        Queue<Integer> aux = new ColaEnlazada<>();
+        while(!pila.isEmpty()){
+            Integer in = pila.pop();
+            
+        }
+    }
+    public Queue<Integer> invertirCola(Queue<Integer> cola){
+        Stack<Integer> aux = new PilaEnlazada<>();
+        Queue<Integer> toRet=new ColaEnlazada<>();
+        Queue<Integer> colaux = new ColaEnlazada<>();
+        Integer i;
+        while(!cola.isEmpty()){
+            i=cola.dequeue();
+            aux.push(i);
+            colaux.enqueue(i);
+        }
+
+        while(!aux.isEmpty()){
+            toRet.enqueue(aux.pop());
+            cola.enqueue(colaux.dequeue());
+        }
+
+        return toRet;
+
+
+            
+    }
+    
 }
