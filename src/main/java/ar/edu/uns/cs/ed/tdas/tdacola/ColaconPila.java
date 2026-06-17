@@ -1,6 +1,8 @@
 package ar.edu.uns.cs.ed.tdas.tdacola;
 
 import java.util.Stack;
+import ar.edu.uns.cs.ed.tdas.tdapila.*;
+import ar.edu.uns.cs.ed.tdas.excepciones.EmptyQueueException;
 
 public class ColaconPila<E> implements Queue<E>{
 

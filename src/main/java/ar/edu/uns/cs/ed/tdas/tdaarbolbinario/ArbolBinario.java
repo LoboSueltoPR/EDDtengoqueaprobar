@@ -252,18 +252,56 @@ public class ArbolBinario<E> implements BinaryTree<E>{
         throw new UnsupportedOperationException("Unimplemented method 'removeNode'");
     }
 
-// Agregue un método a la clase árbol binario programada en el inciso anterior tal que recorra el árbol en pre-orden y
-// retorne un diccionario donde sus entradas tengan como clave al rótulo del padre y como valor a los rótulos de cada
-// uno de sus hijos. Los rótulos ubicados en hojas del árbol no deben pertenecer al diccionario, de esta forma en el
-// diccionario no pueden existir valores nulos
-    public <K,V> Dictionary<K,V> preOrdenDiccionario(Position<E> v) {
-        BTnodo<E> nodo = checkPosition(v);
-        //hace
-        visitar(BTnodo<E> nodo,Dictionary<K,V> dic);
-
+    public void completarDerechos(E r, BinaryTree<E> t)throws EmptyTreeException{
+        if(t.isEmpty())throw new EmptyTreeException(null);
+        completarderechopos(t,t.root(),r);
     }
 
-    private <K,V> void visitarPre(BTnodo<E> nodo,Dictionary<K,V> dic){
+    public void completarderechopos(BinaryTree<E> t, Position<E> nodo,E r){
+        if (t.hasLeft(nodo)){
+            completarderechopos(t,t.left(nodo),r);
+        }
+        if (t.hasRight(nodo)){
+            completarderechopos(t,t.right(nodo),r);
+        }
+
+        if(t.hasLeft(nodo)&&!t.hasRight(nodo)){
+            t.addRight(nodo, r);
+        }
         
+    }
+
+//     Agregue un método a la clase definida en el ejercicio 1 cuya signatura sea: public void
+// eliminarSubarbol(Position<E> p). Este método deberá eliminar del árbol receptor del mensaje todo el
+// subárbol con raíz p. Recuerde que para este ejercicio cuenta con acceso total a la estructura y que el método deberá
+// lanzar InvalidPositionException si p no es válida
+    public void eliminarSubarbol(Position<E> p) throws InvalidPositionException {
+        BTnodo<E> nodo = checkPosition(p);
+        int eliminados = eliminarSubarbolRecursivo(nodo);
+        if (nodo == root) {
+            root = null;
+            size = 0;
+        } else {
+            BTnodo<E> padre = nodo.getParent();
+            if (padre.getLeft() == nodo) {
+                padre.setLeft(null);
+            } else if (padre.getRight() == nodo) {
+                padre.setRight(null);
+            }
+            nodo.setFather(null);
+            size -= eliminados;
+        }
+    }
+
+    private int eliminarSubarbolRecursivo(BTnodo<E> nodo) {
+        if (nodo == null) return 0;
+        int contador = 1;
+        contador += eliminarSubarbolRecursivo(nodo.getLeft());
+        contador += eliminarSubarbolRecursivo(nodo.getRight());
+        nodo.setLeft(null);
+        nodo.setRight(null);
+        nodo.setFather(null);
+        nodo.setElement(null);
+        return contador;
     }
 }

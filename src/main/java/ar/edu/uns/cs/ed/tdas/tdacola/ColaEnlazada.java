@@ -2,6 +2,7 @@ package ar.edu.uns.cs.ed.tdas.tdacola;
 import ar.edu.uns.cs.ed.tdas.excepciones.EmptyQueueException;
 import ar.edu.uns.cs.ed.tdas.tdamapeo.Map;
 import ar.edu.uns.cs.ed.tdas.tdamapeo.MapeoConHashAbierto;
+import ar.edu.uns.cs.ed.tdas.tdapila.*;
 
 public class ColaEnlazada<E> implements Queue<E> {
     private Nodo<E> head;
@@ -98,5 +99,27 @@ public class ColaEnlazada<E> implements Queue<E> {
         }
     }
         
+    
+    public static boolean esPalindromo(Queue<Character> q)throws EmptyQueueException{
+        if(q.isEmpty())throw new EmptyQueueException("");
+        boolean toRet=true;
+        Stack<Character> pila = new PilaEnlazada<>();
+        Queue<Character> aux = new ColaEnlazada<>();
+        Character c = null;
+        while(!q.isEmpty()){
+            c = q.dequeue();
+            if(pila.top().equals(c)){
+                pila.pop();
+            }else{
+            pila.push(c);
+            }
+            aux.enqueue(c);
+        }
+        toRet=pila.isEmpty();
+         while(!aux.isEmpty()){
+            q.enqueue(aux.dequeue());
+         }
+         return toRet;
+    }   
 }
 
