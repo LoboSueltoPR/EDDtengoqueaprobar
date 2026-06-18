@@ -390,4 +390,48 @@ public class ListaDE<E> implements PositionList<E> {
 			lista.addBefore(pos, pos.element());
 		}
 	}
+
+	// Mueve los últimos k elementos al frente conservando el orden.
+	// Retorna un iterable con los elementos que NO fueron movidos.
+	// Ejemplo: (a,b,c,d,e) con k=2 → lista queda (d,e,a,b,c), retorna (a,b,c)
+	public Iterable<E> moverAlFrente(int k) {
+		PositionList<E> noMovidos = new ListaDE<>();
+
+		if (k <= 0 || isEmpty()) {
+			for (E elem : this) noMovidos.addLast(elem);
+			return noMovidos;
+		}
+
+		if (k >= size) return noMovidos; // mover todo = sin cambio neto, nada queda afuera
+
+		// Navegar hasta el pivot: último nodo que NO se mueve (posición size-k)
+		NodoDE<E> pivot = head.getNext();
+		for (int i = 1; i < size - k; i++) {
+			pivot = pivot.getNext();
+		}
+
+		// Recolectar los elementos no movidos para el retorno
+		NodoDE<E> cur = head.getNext();
+		NodoDE<E> kStart = pivot.getNext(); // primer nodo del grupo a mover
+		while (cur != kStart) {
+			noMovidos.addLast(cur.element());
+			cur = cur.getNext();
+		}
+
+		// Referencias clave
+		NodoDE<E> kEnd     = tail.getPrev();  // último nodo del grupo a mover
+		NodoDE<E> firstElem = head.getNext(); // primer nodo actual de la lista
+
+		// Rearmar: head → [k elementos] → [resto] → tail
+		head.setNext(kStart);
+		kStart.setPrev(head);
+
+		kEnd.setNext(firstElem);
+		firstElem.setPrev(kEnd);
+
+		pivot.setNext(tail);
+		tail.setPrev(pivot);
+
+		return noMovidos;
+	}
 }
