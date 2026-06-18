@@ -391,38 +391,47 @@ public class ListaDE<E> implements PositionList<E> {
 		}
 	}
 
-	// Mueve los últimos k elementos al frente conservando el orden.
-	// Retorna un iterable con los elementos que NO fueron movidos.
-	// Ejemplo: (a,b,c,d,e) con k=2 → lista queda (d,e,a,b,c), retorna (a,b,c)
 	public Iterable<E> moverAlFrente(int k) {
-		PositionList<E> noMovidos = new ListaDE<>();
+		ListaDE<E> noMovidos = new ListaDE<>();
 
-		if (k <= 0 || isEmpty()) {
-			for (E elem : this) noMovidos.addLast(elem);
+		// Caso borde: k inválido → devolver copia de la lista sin tocarla
+		if (k <= 0 || size == 0) {
+			NodoDE<E> cur = head.getNext();
+			while (cur != tail) {
+				// insertar en noMovidos directamente con nodos, sin métodos del TDA
+				NodoDE<E> nuevo = new NodoDE<>(cur.element(), noMovidos.tail, noMovidos.tail.getPrev());
+				noMovidos.tail.getPrev().setNext(nuevo);
+				noMovidos.tail.setPrev(nuevo);
+				noMovidos.size++;
+				cur = cur.getNext();
+			}
 			return noMovidos;
 		}
 
-		if (k >= size) return noMovidos; // mover todo = sin cambio neto, nada queda afuera
+		// Caso borde: k >= size, mover todo es no-op, no-movidos vacío
+		if (k >= size) return noMovidos;
 
-		// Navegar hasta el pivot: último nodo que NO se mueve (posición size-k)
+		// Buscar pivot: último nodo que NO se mueve (el nodo (size-k)-ésimo)
 		NodoDE<E> pivot = head.getNext();
 		for (int i = 1; i < size - k; i++) {
 			pivot = pivot.getNext();
 		}
 
-		// Recolectar los elementos no movidos para el retorno
-		NodoDE<E> cur = head.getNext();
-		NodoDE<E> kStart = pivot.getNext(); // primer nodo del grupo a mover
+		NodoDE<E> kStart    = pivot.getNext(); // primer nodo del bloque a mover
+		NodoDE<E> kEnd      = tail.getPrev();  // último nodo del bloque a mover
+		NodoDE<E> firstElem = head.getNext();  // primer nodo actual de la lista
+
+		// Llenar noMovidos con los nodos que quedan (de firstElem hasta pivot inclusive)
+		NodoDE<E> cur = firstElem;
 		while (cur != kStart) {
-			noMovidos.addLast(cur.element());
+			NodoDE<E> nuevo = new NodoDE<>(cur.element(), noMovidos.tail, noMovidos.tail.getPrev());
+			noMovidos.tail.getPrev().setNext(nuevo);
+			noMovidos.tail.setPrev(nuevo);
+			noMovidos.size++;
 			cur = cur.getNext();
 		}
 
-		// Referencias clave
-		NodoDE<E> kEnd     = tail.getPrev();  // último nodo del grupo a mover
-		NodoDE<E> firstElem = head.getNext(); // primer nodo actual de la lista
-
-		// Rearmar: head → [k elementos] → [resto] → tail
+		// Rearmar punteros: head → [k últimos] → [resto] → tail
 		head.setNext(kStart);
 		kStart.setPrev(head);
 
