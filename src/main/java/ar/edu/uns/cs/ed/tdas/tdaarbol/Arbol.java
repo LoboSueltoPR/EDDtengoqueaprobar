@@ -573,4 +573,32 @@ public Map<Character, Integer> cantOperadores(BinaryTree<Character> a){
 			toRet.put('/', toRet.get('/')+1);
 		}
 }
+// Ejercicio 2 — Arbol: convertirAhoja(p)
+// Elimina todos los nodos necesarios para que p sea hoja. Retorna iterable con los eliminados.
+	public Iterable<E> convertirAhoja(Position<E> p){
+		Tnodo<E> nodo =checkposition(p);
+		PositionList<E> toRet = new ListaDE<>();
+		if (nodo.getHijos().isEmpty())return toRet;
+		PositionList<Tnodo<E>> hijos = nodo.getHijos();
+		for(Position<Tnodo<E>> hijo:hijos.positions()){
+			recolectar(hijo,toRet);
+		}
+		return toRet;
+	}
+
+	public void recolectar(Position<Tnodo<E>> nodo,PositionList<E> toRet){
+		if(!nodo.element().getHijos().isEmpty()){
+			PositionList<Tnodo<E>> hijos = nodo.element().getHijos();
+			for(Position<Tnodo<E>> hijo:hijos.positions()){
+				recolectar(hijo,toRet);
+			}
+		}
+		toRet.addLast(nodo.element().element());
+		Tnodo<E> nod = nodo.element();
+		nod.getParent().getHijos().remove(nodo);
+		nod.setFather(null);
+		size--;
+		
+	}
+
 }

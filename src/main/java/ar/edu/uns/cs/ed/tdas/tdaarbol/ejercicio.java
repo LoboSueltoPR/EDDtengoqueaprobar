@@ -14,7 +14,4 @@ public class ejercicio {
         }
     }
 
-    public static <E> void insertarMasivo( E e, int x, Tree<E> A ){
-        
-    }
 }
