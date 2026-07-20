@@ -1,5 +1,7 @@
 package ar.edu.uns.cs.ed.tdas.tdadiccionario;
 
+import java.util.Iterator;
+
 import ar.edu.uns.cs.ed.tdas.Entry;
 import ar.edu.uns.cs.ed.tdas.Position;
 import ar.edu.uns.cs.ed.tdas.excepciones.InvalidEntryException;
@@ -12,7 +14,7 @@ import ar.edu.uns.cs.ed.tdas.tdamapeo.Entrada;
 public class DiccionarioHashAbierto<K, V> implements Dictionary<K, V> {
 
     protected static int BUCKETS;
-    protected PositionList<Entry<K, V>>[] array;
+    protected PositionList<Entrada<K, V>>[] array;
     protected int cantElems;
 
     @SuppressWarnings("unchecked")
@@ -54,7 +56,7 @@ public class DiccionarioHashAbierto<K, V> implements Dictionary<K, V> {
 
     public Entry<K, V> insert(K key, V value) {
         if (key == null) throw new InvalidKeyException("Clave nula!");
-        Entry<K, V> nueva = new Entrada<>(key, value);
+        Entrada<K, V> nueva = new Entrada<>(key, value);
         int bucket = hash(key);
         array[bucket].addLast(nueva);
         cantElems++;
@@ -64,7 +66,7 @@ public class DiccionarioHashAbierto<K, V> implements Dictionary<K, V> {
     public Entry<K, V> remove(Entry<K, V> e) {
         if (e == null || e.getKey() == null) throw new InvalidEntryException("Entrada invalida!");
         int bucket = hash(e.getKey());
-        for (Position<Entry<K, V>> pos : array[bucket].positions()) {
+        for (Position<Entrada<K, V>> pos : array[bucket].positions()) {
             if (pos.element() == e) {   // igualdad de referencia: buscamos el objeto exacto
                 try {
                     array[bucket].remove(pos);
@@ -104,4 +106,43 @@ public class DiccionarioHashAbierto<K, V> implements Dictionary<K, V> {
         }
         return toRet;
     }
+
+    public boolean iguales(K k1, K k2)throws InvalidKeyException{
+        if(k1==null||k2==null)throw new InvalidKeyException("llave invalida");
+        int llave1 = hash(k1);
+        int llave2 = hash(k2);
+        boolean toRet=true;
+        boolean encontre = false;
+        Iterator<Entrada<K,V>> it1= array[llave1].iterator();
+        Iterator<Entrada<K,V>> it2= array[llave1].iterator();
+        while(it1.hasNext()&&toRet){
+            Entrada<K,V> puntero = it1.next();
+            if(puntero.getKey().equals(k1)){
+                while(it2.hasNext()&&!encontre){
+                    Entrada<K,V> puntero2 = it2.next();
+                    if(puntero2.getKey().equals(puntero.getKey())){
+                        if(puntero.getValue().equals(puntero2.getValue())){
+                            encontre=true;
+                            
+                        }
+                    }
+                }
+            }
+            toRet=encontre;
+        }
+        return toRet;
+    }
+
+    // Método que recibe clave k y entero e, retorna true si hay al menos e entradas con clave k.
+    public boolean ej(K key,int e){
+        int contador = 0;
+        int llave = hash(key);
+        Iterator<Entrada<K,V>> it = array[llave].iterator();
+        while(it.hasNext()&&contador<e){
+            Entrada<K,V> puntero = it.next();
+            if(puntero.getKey().equals(key))contador++;
+        }
+        return contador==e;
+    }
+    
 }
