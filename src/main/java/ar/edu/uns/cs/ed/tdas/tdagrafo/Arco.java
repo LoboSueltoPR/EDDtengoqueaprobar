@@ -15,5 +15,15 @@ public class Arco<V,E> implements Edge<E> {
     }
     public E element() { return rotulo; }
     // Setters y getters
-…
+    public void setRotulo(E rotulo) { this.rotulo = rotulo; }
+    public Vertice<V,E> getV1() { return v1; }
+    public Vertice<V,E> getV2() { return v2; }
+    public Position<Arco<V,E>> getPosicionEnArcos() { return posicionEnArcos; }
+    public void setPosicionEnArcos(Position<Arco<V,E>> posicionEnArcos) { this.posicionEnArcos = posicionEnArcos; }
+    public Position<Arco<V,E>> getPosicionEnIv1() { return posicionEnIv1; }
+    public void setPosicionEnIv1(Position<Arco<V,E>> posicionEnIv1) { this.posicionEnIv1 = posicionEnIv1; }
+    public Position<Arco<V,E>> getPosicionEnIv2() { return posicionEnIv2; }
+    public void setPosicionEnIv2(Position<Arco<V,E>> posicionEnIv2) { this.posicionEnIv2 = posicionEnIv2; }
+    
+
 }
