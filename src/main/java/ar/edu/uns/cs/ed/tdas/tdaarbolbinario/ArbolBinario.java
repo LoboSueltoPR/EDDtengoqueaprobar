@@ -303,5 +303,6 @@ public class ArbolBinario<E> implements BinaryTree<E>{
         nodo.setFather(null);
         nodo.setElement(null);
         return contador;
+        
     }
 }
