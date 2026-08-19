@@ -132,13 +132,19 @@ public class Grafo<V, E> implements Graph<V, E> {
     public V replace(Vertex<V> v, V x) {
         // TODO 8. Validar v con checkVertex. Guardar el rótulo viejo (element()),
         // setear el nuevo con setRotulo(x), devolver el viejo.
-        throw new UnsupportedOperationException("Unimplemented method 'replace'");
+        Vertice<V,E> ver = checkVertex(v);
+        V toRet = ver.element();
+        ver.setRotulo(x);
+        return toRet;
     }
 
     @Override
     public E replace(Edge<E> e, E x) {
         // TODO 8. Mismo patrón que el replace de arriba pero con checkEdge y el Arco.
-        throw new UnsupportedOperationException("Unimplemented method 'replace'");
+        Arco<V,E> arc = checkEdge(e);
+        E toRet = arc.element();
+        arc.setRotulo(x);
+        return toRet;
     }
 
     @Override
@@ -148,7 +154,10 @@ public class Grafo<V, E> implements Graph<V, E> {
         // Guardar en el vértice la Position que te devuelve ese addLast
         // (setPosicionEnNodos) para poder borrarlo después en O(1).
         // Devolver el vértice.
-        throw new UnsupportedOperationException("Unimplemented method 'insertVertex'");
+        
+        Vertice<V,E> ver = new Vertice<>(x);
+        ver.setPosicionEnNodos(vertices.addLast(ver));
+
     }
 
     @Override
